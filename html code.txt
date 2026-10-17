@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+
+    <!-- CSS -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 15px;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        .form-container {
+            max-width: 550px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #333;
+        }
+
+        .description {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .field-label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #607d8b;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 12px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            accent-color: #607d8b;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 28px;
+            background-color: #607d8b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #455a64;
+        }
+
+        #result {
+            text-align: center;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <h1>Contact Form</h1>
+        <p class="description">
+            Please fill in your details below.
+        </p>
+
+        <form id="contactForm">
+
+            <!-- Name -->
+            <label class="field-label" for="name">Name</label>
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your name"
+                required
+            >
+
+            <!-- Email -->
+            <label class="field-label" for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <!-- Message -->
+            <label class="field-label" for="message">Message</label>
+            <textarea
+                id="message"
+                rows="4"
+                placeholder="Write your message"
+                required
+            ></textarea>
+
+            <!-- Courses -->
+            <label class="field-label">Courses of Interest</label>
+            <div class="options">
+                <label>
+                    <input type="checkbox" name="course" value="English">
+                    English
+                </label>
+
+                <label>
+                    <input type="checkbox" name="course" value="Math">
+                    Math
+                </label>
+
+                <label>
+                    <input type="checkbox" name="course" value="Science">
+                    Science
+                </label>
+
+                <label>
+                    <input type="checkbox" name="course" value="History">
+                    History
+                </label>
+            </div>
+
+            <!-- Gender -->
+            <label class="field-label">Gender</label>
+            <div class="options">
+                <label>
+                    <input type="radio" name="gender" value="Male" required>
+                    Male
+                </label>
+
+                <label>
+                    <input type="radio" name="gender" value="Female">
+                    Female
+                </label>
+            </div>
+
+            <!-- Country -->
+            <label class="field-label" for="country">Country</label>
+            <select id="country" required>
+                <option value="">Select your country</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+            </select>
+
+            <!-- Submit -->
+            <button type="submit">Submit</button>
+
+            <p id="result" role="status" aria-live="polite"></p>
+
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const form = document.getElementById("contactForm");
+        const result = document.getElementById("result");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const message = document.getElementById("message").value.trim();
+            const country = document.getElementById("country").value;
+
+            const courses = Array.from(
+                document.querySelectorAll(
+                    'input[name="course"]:checked'
+                )
+            ).map(function(course) {
+                return course.value;
+            });
+
+            const gender = document.querySelector(
+                'input[name="gender"]:checked'
+            );
+
+            if (courses.length === 0) {
+                result.style.color = "red";
+                result.textContent = "Please select at least one course.";
+                return;
+            }
+
+            if (!name || !email || !message || !country || !gender) {
+                result.style.color = "red";
+                result.textContent = "Please complete all required fields.";
+                return;
+            }
+
+            const formData = {
+                name: name,
+                email: email,
+                message: message,
+                courses: courses,
+                gender: gender.value,
+                country: country
+            };
+
+            console.log("Submitted form details:", formData);
+
+            result.style.color = "green";
+            result.textContent = "Form submitted successfully!";
+
+            console.log(formData);
+            form.reset();
+        });
+    </script>
+
+</body>
+</html>
